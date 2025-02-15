@@ -1,6 +1,8 @@
 package entities;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class Reservation {
 	
@@ -8,12 +10,14 @@ public class Reservation {
 	private Date checkIn;
 	private Date checkOut;
 	
+	private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+	
 	public Reservation() {
 		
 	}
 
 	public Reservation(Integer roomNumber, Date checkIn, Date checkOut) {
-		super();
 		this.roomNumber = roomNumber;
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
@@ -31,23 +35,23 @@ public class Reservation {
 		return checkIn;
 	}
 
-	public void setCheckIn(Date checkIn) {
-		this.checkIn = checkIn;
-	}
-
 	public Date getCheckOut() {
 		return checkOut;
 	}
-
-	public void setCheckOut(Date checkOut) {
-		this.checkOut = checkOut;
-	}
 	
-	public Integer duration() {
-		return null;
+	public long duration() {
+		long diff = checkOut.getTime() - checkIn.getTime();
+		return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 	}
 	
 	public void updateDates(Date checkin, Date checkout) {
-		
+		this.checkIn = checkin;
+		this.checkOut = checkout;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("Room %d, check-in: %s, check-out: %s, %d nights" , 
+				roomNumber, simpleDateFormat.format(checkIn), simpleDateFormat.format(checkOut), duration());
 	}
 }
